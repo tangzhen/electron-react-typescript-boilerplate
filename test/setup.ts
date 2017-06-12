@@ -1,10 +1,11 @@
-import { jsdom } from 'jsdom';
+import { JSDOM } from 'jsdom';
 
 declare var global: any;
 declare var window: any;
 
-global.document = jsdom('<!doctype html><html><body></body></html>');
-global.window = document.defaultView;
+var dom = new JSDOM('<!doctype html><html><body></body></html>');
+global.window = dom.window;
+global.document = dom.window.document;
 global.navigator = global.window.navigator;
 window.localStorage = window.sessionStorage = {
   getItem(this: any, key: string) {

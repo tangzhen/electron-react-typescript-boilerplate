@@ -5,15 +5,12 @@
  */
 
 const webpack = require('webpack');
-const validate = require('webpack-validator');
 const merge = require('webpack-merge');
 const baseConfig = require('./webpack.config.base');
 
 const port = process.env.PORT || 3000;
 
-module.exports = validate(merge(baseConfig, {
-  debug: true,
-
+module.exports = merge(baseConfig, {
   devtool: 'inline-source-map',
 
   entry: [
@@ -34,10 +31,10 @@ module.exports = validate(merge(baseConfig, {
     //     exclude: /node_modules/
     //   }
     // ],
-    loaders: [
+    rules: [
       {
         test: /\.global\.css$/,
-        loaders: [
+        use: [
           'style-loader',
           'css-loader?sourceMap'
         ]
@@ -45,17 +42,17 @@ module.exports = validate(merge(baseConfig, {
 
       {
         test: /^((?!\.global).)*\.css$/,
-        loaders: [
+        use: [
           'style-loader',
           'css-loader?modules&sourceMap&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]'
         ]
       },
 
-      { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/font-woff' },
-      { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/font-woff' },
-      { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/octet-stream' },
-      { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file' },
-      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=image/svg+xml' },
+      { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: 'url-loader?limit=10000&mimetype=application/font-woff' },
+      { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: 'url-loader?limit=10000&mimetype=application/font-woff' },
+      { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url-loader?limit=10000&mimetype=application/octet-stream' },
+      { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file-loader' },
+      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url-loader?limit=10000&mimetype=image/svg+xml' },
     ]
   },
 
@@ -65,7 +62,7 @@ module.exports = validate(merge(baseConfig, {
 
     // “If you are using the CLI, the webpack process will not exit with an error code by enabling this plugin.”
     // https://github.com/webpack/docs/wiki/list-of-plugins#noerrorsplugin
-    new webpack.NoErrorsPlugin(),
+    new webpack.NoEmitOnErrorsPlugin(),
 
     // NODE_ENV should be production so that modules do not perform certain development checks
     new webpack.DefinePlugin({
@@ -75,4 +72,4 @@ module.exports = validate(merge(baseConfig, {
 
   // https://github.com/chentsulin/webpack-target-electron-renderer#how-this-module-works
   target: 'electron-renderer'
-}));
+});
